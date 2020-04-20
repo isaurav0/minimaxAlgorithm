@@ -203,7 +203,7 @@ function userplay(e, player){
     }
 };
 
-function minimax(box){
+function minimax(box, depth, isMax){
     return 5
 }
 
@@ -220,7 +220,7 @@ function moveAI(){
             //spot available
             // unchecked.push(box[i])
             fakeCheck(box[i])
-            let score = minimax(box)
+            let score = minimax(box, 0, true)
             unCheck(box[i])
             if( score > bestScore ){
                 bestScore = score
@@ -313,65 +313,40 @@ function check(box, team){
 
 
 
-function checkWinner(team){
+function checkWinner(team, isFake){
     var k =0;
     var flag = 0;
     for(i=1;i<4;i++){
         //vertical
         if(box[i].checked && box[i+3].checked && box[i+6].checked && box[i].team==box[i+3].team && box[i].team==box[i+6].team)
         {
-            ctx.beginPath();
-            startx = 387;
-            starty = 108;
-            ctx.moveTo(startx+(i-1)*(width+gap),108);
-            ctx.lineTo(startx+(i-1)*(width+gap), 605);
-            ctx.lineWidth = "8";
-            drawline(team);
-            gameOver= true;
-            myturn = true
-            console.log('gameOver')
+            if(!isFake){                
+                drawline(team, 387+(i-1)*(width+gap), 108 , 387+(i-1)*(width+gap), 605);                
+            }
+            else
+                return team
+            
         }
         
         //horizontal
         var j=i+k;
         if(box[j].checked && box[j+1].checked && box[j+2].checked && box[j].team==box[j+1].team && box[j].team==box[j+2].team)
-        {
-            ctx.beginPath();
-            starty = 174;
-            ctx.moveTo(293,starty+(i-1)*(width+gap));
-            ctx.lineTo(800, starty+(i-1)*(width+gap));
-            ctx.lineWidth = "8";
-            drawline(team);
-            gameOver=true;
-            myturn = true
-            console.log('gameOver')
+        {            
+            drawline(team, 293,174+(i-1)*(width+gap), 800, 174+(i-1)*(width+gap));
+
         }
         k+=2;
 
         //diagonal
         if(i==1 && box[i].checked && box[i+4].checked && box[i+8].checked && box[i].team==box[i+4].team && box[i].team==box[i+8].team)
         {
-            ctx.beginPath();
-            ctx.moveTo(296,112);
-            ctx.lineTo(802, 585);
-            ctx.lineWidth = "8";
-            drawline(team);
-            gameOver= true;
-            myturn = true
-            console.log('gameOver')
+            drawline(team, 296, 112, 802, 585);
         }
         
         //diagonal
         if(i==3 && box[i].checked && box[i+2].checked && box[i+4].checked && box[i].team==box[i+2].team && box[i].team==box[i+4].team)
         {
-            ctx.beginPath();
-            ctx.moveTo(798,109);
-            ctx.lineTo(297, 591);
-            ctx.lineWidth = "8";
-            drawline(team);
-            gameOver= true;
-            myturn = true
-            console.log('gameOver')
+            drawline(team, 798, 109, 297, 591);
         }
     }
 
@@ -401,7 +376,12 @@ function wait(ms){
    }
 };
 
-function drawline(team){
+function drawline(team, moveX, moveY, lineX, lineY ){
+        console.log("gameOver")
+        ctx.beginPath();
+        ctx.moveTo(moveX, moveY);
+        ctx.lineTo(lineX, lineY);
+        ctx.lineWidth = "8";
         if(team){
             ctx.strokeStyle ="orange";
             ctx.stroke();
@@ -410,5 +390,10 @@ function drawline(team){
             ctx.strokeStyle ="green";
             ctx.stroke();
         }
-    
+        gameOver= true;
+        myturn = true            
 }
+
+
+
+
