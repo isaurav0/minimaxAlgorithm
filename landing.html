@@ -19,7 +19,7 @@
 		body{
 			background-color: black;
 			color: white;
-			font-family: tictac;
+			font-family: Courier;
 		}
 
 		.title{
@@ -50,6 +50,8 @@
 
 		.menu .choice:hover{
 			cursor: pointer;
+	        display: inline-block;
+	        color: rgb(100,255,100);
 		}		
 		
 	</style>
@@ -58,17 +60,28 @@
 
 	<div class="title">
 		<span style="color: #00B4EB;">Tic</span> 
-		<span style="color: rgb(200, 10, 10);">Tac</span>
+		<span style="color: rgb(255, 255, 255);">Tac</span>
 		<span style="color: rgb(10, 200, 10);">Toe</span>
 	</div>
 
 	<div class="menu">
-		<div style="color: #00B4EB;"> <span class="choice" id="single"><span class="ghost"> ----></span> Unbeatable AI </span> </div>
-		<div style="color: rgb(200, 10, 10);"> <span class="choice"><span class="ghost" id="multi"> ----></span> Play With Friend </span> </div>
+		<div style="color: rgb(100,150,100);"> <span class="choice" id="single"><span class="ghost"> -></span> Unbeatable AI <span class="ghost">  <-</span> </span> </div>
+		<div style="color: rgb(100,150,100);"> <span class="choice" id="multi"><span class="ghost"> -></span> Play With Friend <span class="ghost">  <-</span> </span> </span> </div>
 	</div>
 
 	<script type="text/javascript">
 		
+		var choices = document.getElementsByClassName("choice");
+		console.log(choices.length)
+
+		Array.from(choices).forEach(elem=>{
+			elem.addEventListener("click", startGame)
+		})
+
+		function startGame(e){
+			window.localStorage.setItem("multi", e.target.id!=="single")
+			window.location = "tictac.html"
+		}
 
 
 	</script>

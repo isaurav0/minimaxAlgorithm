@@ -6,7 +6,7 @@
         <style>
             body{
                 margin: 0px;
-                background-color: white;
+                background-color: black;
                 border: 0px;
             }
             canvas{
@@ -15,12 +15,18 @@
                 border: 0px;
             }
             #backbutton{
-                color: green;
+                color: rgb(100,150,100);
                 font-size:  50px;
                 font-family: Courier;
                 position: absolute;
                 top: 20px;
                 margin: 20px;
+                text-decoration: none;
+            }
+
+            #backbutton:hover{
+                color: rgb(100,255,100);
+                text-shadow: 1px 1px rgb(100,100,100);
             }
         </style>
     </head>
@@ -29,7 +35,7 @@
         <!-- <button id='create' class='initiate' onclick="respond(this.id)"> Create A game </button> <br> -->
         <!-- <button id='create' class='initiate' onclick="respond(this.id)"> Create A game </button> <br> -->
         <!-- <button id='join' class='initiate' onclick="respond(this.id)">Join In a Game</button> -->
-        <a href="landing.html"><img src="back.png" id="backbutton"></a>
+        <a href="landing.html" id="backbutton"> <-Back- </a>
         <audio src="draw.wav" id="draw"></audio>
         <canvas id="tictac"></canvas>
         <script src="tictac.js"></script>
