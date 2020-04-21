@@ -13,7 +13,7 @@ var invalid = false;
 
 
 //game Type 
-var multiplayer = false;
+var multiplayer = false ;
 var online = false;
 
 
@@ -39,7 +39,7 @@ image.onload = function(){
             }
             // wait(1000);
             if(!gameOver && !invalid && !team){
-                setTimeout(()=>moveAI(),1000)
+                setTimeout(()=>moveAI(),700)
             }
             invalid = false; 
         }
@@ -155,7 +155,6 @@ function userplay(e, player){
     //clear error
     ctx.fillStyle = "Black";
     ctx.fillRect(378,613, 800,608);
-    console.log('Player: ', player)
 
     if(e.x>xstart && e.x<xstart+width && e.y>ystart && e.y<ystart+width && !box1.checked){
         check(box[1], player)
@@ -226,6 +225,7 @@ function minimax(box, depth, isMax){
 
     if(result!==null){
         return isMax ? scores[result]-depth : scores[result]+depth //greater the depth, lower the score for maximizing player
+        // return isMax ? scores[result] : scores[result] //greater the depth, lower the score for maximizing player
     }
     
     let unchecked = []  
@@ -251,14 +251,13 @@ function minimax(box, depth, isMax){
 
 //AI's move
 function moveAI(){
-    // team = !team;
-    // let scores = []
     let bestScore = -Infinity;
     var bestMove;
     let unchecked=[];
+
+    //find unchecked boxes
     for(i=1;i<10;i++){
         if(!box[i].checked && !team){
-            //spot available
             unchecked.push(box[i])            
         }
     }
@@ -267,13 +266,17 @@ function moveAI(){
         fakeCheck(move, false)  //ai chooses this moves
         let score = minimax(box, 0, false) //lets minimzing player move 
         unCheck(move)   //uncheck this and check other to see the best move
-        if( score > bestScore ){
+        console.log(move.name, score)
+
+        if( score > bestScore && score <=10  ){
             bestScore = score
             bestMove = move
         }
     })
-
-    check(bestMove,team)
+    console.log("--------------------------")
+    check(bestMove,team) 
+    console.log("Chosen Move", bestMove)
+    console.log("--------------------------")
     team = true;
     okayToMove = true;
 }
@@ -324,9 +327,11 @@ window.onclick=function(){
 }
 
 
-function check(box, team){
+function check(box, team){      //to point a box and draw
     box.team = team;
     box.checked = true
+    document.getElementById("draw").play()
+    wait(200)
     if(team==true){
         ctx.font = "150px Arial";
         ctx.fillStyle = 'orange';
@@ -336,7 +341,8 @@ function check(box, team){
         ctx.font = "90px Arial";
         ctx.fillStyle = 'green';
         ctx.fillText("◯", box.x, box.y);
-    }
+    }    
+
     checkWinner(team,false);
     if(!gameOver){
         if(!online){
@@ -350,7 +356,7 @@ function check(box, team){
 
 
 
-function checkWinner(team, isFake){
+function checkWinner(team, isFake){         //isFake to implement AI playing so AI's recursive moves don't get drawn
     var k =0;
     var flag = 0;
     for(i=1;i<4;i++){
