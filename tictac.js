@@ -1,4 +1,4 @@
-//background image
+// background image
 var image = new Image();
 image.src = "black.png";
 
@@ -69,63 +69,72 @@ var box1={
     x: 340,
     y:220,
     checked: false,
-    team: null
+    team: null,
+    name: 'box1'
 }
 
 var box2={
     x: 340+width+gap,
     y:220,
     checked: false,
-    team: null
+    team: null,
+    name: 'box2'
 }
 
 var box3={
     x: 340+2*width+2*gap,
     y:220,
     checked: false,
-    team: null
+    team: null,
+    name: 'box3'
 }
 
 var box4={
     x: 340,
     y:220+width+gap,
     checked: false,
-    team: null
+    team: null,
+    name: 'box4'
 }
 
 var box5={
     x: 340+width+gap,
     y:220+width+gap,
     checked: false,
-    team: null
+    team: null,
+    name: 'box5'
 }
 
 var box6={
     x: 340+2*width+2*gap,
     y:220+width+gap,
     checked: false,
-    team: null
+    team: null,
+    name: 'box6'
 }
 
 var box7={
     x: 340,
     y:220+2*width+gap,
     checked: false,
-    team: null
+    team: null,
+    name: 'box7'
 }
 
 var box8={
     x: 340+width+gap,
     y:220+2*width+gap,
     checked: false,
-    team: null
+    team: null,
+    name: 'box8'
 }
 
 var box9={
     x: 340+2*width+2*gap,
     y:220+2*width+gap,
     checked: false,
-    team: null
+    team: null,
+    name: 'box9'
 }
 
 box = []
@@ -138,6 +147,7 @@ box[6] = box6
 box[7] = box7
 box[8] = box8
 box[9] = box9
+
 
 //gameplay
 function userplay(e, player){
@@ -203,43 +213,73 @@ function userplay(e, player){
     }
 };
 
+
+var scores ={
+    'X': -10,
+    'O': 10,
+    'tie': 0
+}
+
 function minimax(box, depth, isMax){
-    return 5
+
+    let result = checkWinner(isMax, true) //check if Game over
+
+    if(result!==null){
+        return isMax ? scores[result]-depth : scores[result]+depth //greater the depth, lower the score for maximizing player
+    }
+    
+    let unchecked = []  
+    let bestScore = isMax ? -Infinity: Infinity 
+    for(i=1;i<10;i++){
+        if(!box[i].checked)
+            unchecked.push(box[i]);            //take out all unchecked boxes
+    }
+
+
+    //play all the possible moves alternately
+    unchecked.forEach(move => {
+        fakeCheck(move, !isMax) // pretend playing, dont draw on canvas
+        let score = minimax(box, depth+1, !isMax) // let alternate player play
+        unCheck(move)  //make things normal to make choices with other moves
+        bestScore = isMax ? Math.max(score, bestScore) : Math.min(score, bestScore) //Maximizing player maximizes score, minimizing minimizes
+    });
+
+    return bestScore
+
 }
 
 
 //AI's move
 function moveAI(){
     // team = !team;
-
+    // let scores = []
     let bestScore = -Infinity;
-    let bestMove
-    // unchecked=[];
+    var bestMove;
+    let unchecked=[];
     for(i=1;i<10;i++){
         if(!box[i].checked && !team){
             //spot available
-            // unchecked.push(box[i])
-            fakeCheck(box[i])
-            let score = minimax(box, 0, true)
-            unCheck(box[i])
-            if( score > bestScore ){
-                bestScore = score
-                bestMove = i
-                console.log("bestMove: ", bestMove)
-            }
+            unchecked.push(box[i])            
         }
     }
 
+    unchecked.forEach(move => {
+        fakeCheck(move, false)  //ai chooses this moves
+        let score = minimax(box, 0, false) //lets minimzing player move 
+        unCheck(move)   //uncheck this and check other to see the best move
+        if( score > bestScore ){
+            bestScore = score
+            bestMove = move
+        }
+    })
 
-    check(box[bestMove],team)
-    // var move = findBestMove()
-
+    check(bestMove,team)
     team = true;
     okayToMove = true;
 }
 
 
-function fakeCheck(box){
+function fakeCheck(box, team){      //change property of box but dont draw on canvas 
     box.team = team;
     box.checked = true
 }
@@ -249,7 +289,6 @@ function unCheck(box){
     box.checked = false
 }
 
-
 //turn
 function turn(team){
     if(team){
@@ -257,16 +296,14 @@ function turn(team){
         ctx.fillRect(820,290,945,290)
         ctx.fillStyle = "orange";
         ctx.font = "40px Arial"
-        // ctx.fillText("×",62,350);
-        ctx.fillText("x",62,350);
+        ctx.fillText("×",62,350);
     }
     if(!team){
         ctx.fillStyle = "black";
         ctx.fillRect(34,290,155,290)
         ctx.fillStyle = "green";
         ctx.font = "25px Arial"
-        // ctx.fillText("◯",1000,350);
-        ctx.fillText("o",1000,350);
+        ctx.fillText("◯",1000,350);
     }
 }
 
@@ -293,14 +330,14 @@ function check(box, team){
     if(team==true){
         ctx.font = "150px Arial";
         ctx.fillStyle = 'orange';
-        ctx.fillText("X",box.x,box.y);
+        ctx.fillText("×",box.x,box.y);
     }
     if(team==false){
         ctx.font = "90px Arial";
         ctx.fillStyle = 'green';
-        ctx.fillText("O", box.x, box.y);
+        ctx.fillText("◯", box.x, box.y);
     }
-    checkWinner(team);
+    checkWinner(team,false);
     if(!gameOver){
         if(!online){
             turn(!team);
@@ -318,35 +355,41 @@ function checkWinner(team, isFake){
     var flag = 0;
     for(i=1;i<4;i++){
         //vertical
-        if(box[i].checked && box[i+3].checked && box[i+6].checked && box[i].team==box[i+3].team && box[i].team==box[i+6].team)
+        if(box[i].checked && box[i+3].checked && box[i+6].checked && box[i].team==box[i+3].team && box[i].team==box[i+6].team )
         {
-            if(!isFake){                
-                drawline(team, 387+(i-1)*(width+gap), 108 , 387+(i-1)*(width+gap), 605);                
-            }
-            else
-                return team
-            
+            if(isFake)
+                return team ? "X" : "O"
+            else                
+                drawline(team, 387+(i-1)*(width+gap), 108 , 387+(i-1)*(width+gap), 605);            
         }
         
         //horizontal
         var j=i+k;
         if(box[j].checked && box[j+1].checked && box[j+2].checked && box[j].team==box[j+1].team && box[j].team==box[j+2].team)
-        {            
-            drawline(team, 293,174+(i-1)*(width+gap), 800, 174+(i-1)*(width+gap));
-
+        {                           
+            if(!isFake)
+                drawline(team, 293,174+(i-1)*(width+gap), 800, 174+(i-1)*(width+gap));
+            else
+                return team ? "X" : "O"
         }
         k+=2;
 
         //diagonal
         if(i==1 && box[i].checked && box[i+4].checked && box[i+8].checked && box[i].team==box[i+4].team && box[i].team==box[i+8].team)
         {
-            drawline(team, 296, 112, 802, 585);
+            if(!isFake)
+                drawline(team, 296, 112, 802, 585);
+            else
+                return team ? "X" : "O"
         }
         
         //diagonal
         if(i==3 && box[i].checked && box[i+2].checked && box[i+4].checked && box[i].team==box[i+2].team && box[i].team==box[i+4].team)
         {
-            drawline(team, 798, 109, 297, 591);
+            if(!isFake)
+                drawline(team, 798, 109, 297, 591);
+            else
+                return team ? "X" : "O"
         }
     }
 
@@ -361,10 +404,12 @@ function checkWinner(team, isFake){
         }
     }
     if(flag>8){
+        if(isFake)
+            return 'tie'
         gameOver = true;
-        myturn = true
-        console.log('gameOver')
+        myturn = true     
     }
+    return null
 }
 
 //wait
@@ -375,6 +420,7 @@ function wait(ms){
       end = new Date().getTime();
    }
 };
+
 
 function drawline(team, moveX, moveY, lineX, lineY ){
         console.log("gameOver")
@@ -391,9 +437,5 @@ function drawline(team, moveX, moveY, lineX, lineY ){
             ctx.stroke();
         }
         gameOver= true;
-        myturn = true            
+        myturn = true
 }
-
-
-
-
