@@ -6,14 +6,14 @@ image.src = "black.png";
 const width = 160;
 const gap = 8;
 var gameOver = false;
-var start = true;
+var gameStart = false;
 var okayToMove = true;
 var team = true;
 var invalid = false;
 
 
 //game Type 
-var multiplayer = false ;
+var multiplayer = window.localStorage.getItem("multi")=="true" ? true : false;
 var online = false;
 
 
@@ -62,7 +62,6 @@ image.onload = function(){
     });
 }
 
-//boxes 
 
 //box properties
 var box1={
@@ -147,6 +146,7 @@ box[6] = box6
 box[7] = box7
 box[8] = box8
 box[9] = box9
+
 
 
 //gameplay
@@ -268,7 +268,7 @@ function moveAI(){
         unCheck(move)   //uncheck this and check other to see the best move
         console.log(move.name, score)
 
-        if( score > bestScore && score <=10  ){
+        if( score > bestScore && score <=10  ){     //because winning score is 10 at 0 depth
             bestScore = score
             bestMove = move
         }

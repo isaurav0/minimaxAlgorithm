@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TicTacToe</title>
+	<style type="text/css">
+
+		@font-face {
+            font-family: 'tictac';
+            src: url('./fonts/joker.woff') format('woff'), /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+             url('./fonts/joker.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+        }
+
+        @font-face {
+            font-family: 'spring';
+            src: url('./fonts/spring.woff') format('woff'), /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+             url('./fonts/spring.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+        }
+
+		body{
+			background-color: black;
+			color: white;
+			font-family: tictac;
+		}
+
+		.title{
+			font-size: 100px;
+			margin-top: 50px;
+			text-align: center;		
+		}
+
+		.menu{
+			font-size: 50px;
+			margin: 50px;
+			font-weight: bolder;
+			text-align: center;
+			font-family: spring;
+		}
+
+		.menu div{
+			margin: 70px;
+		}
+
+		.ghost {
+			display: none;			
+		}
+
+		.menu .choice:hover .ghost{
+			display: inline-block;
+		}
+
+		.menu .choice:hover{
+			cursor: pointer;
+		}		
+		
+	</style>
+</head>
+<body>
+
+	<div class="title">
+		<span style="color: #00B4EB;">Tic</span> 
+		<span style="color: rgb(200, 10, 10);">Tac</span>
+		<span style="color: rgb(10, 200, 10);">Toe</span>
+	</div>
+
+	<div class="menu">
+		<div style="color: #00B4EB;"> <span class="choice" id="single"><span class="ghost"> ----></span> Unbeatable AI </span> </div>
+		<div style="color: rgb(200, 10, 10);"> <span class="choice"><span class="ghost" id="multi"> ----></span> Play With Friend </span> </div>
+	</div>
+
+	<script type="text/javascript">
+		
+
+
+	</script>
+
+
+</body>
+</html>
+
+
+
+
