@@ -254,6 +254,7 @@ function moveAI(){
     let bestScore = -Infinity;
     var bestMove;
     let unchecked=[];
+    let confirmWin = false
 
     //find unchecked boxes
     for(i=1;i<10;i++){
@@ -268,10 +269,17 @@ function moveAI(){
         unCheck(move)   //uncheck this and check other to see the best move
         console.log(move.name, score)
 
-        if( score > bestScore && score <=10  ){     //because winning score is 10 at 0 depth
+        if( score > bestScore && !confirmWin){     //because winning score is 10 at 0 depth
             bestScore = score
             bestMove = move
         }
+
+        if(score==10){
+            bestScore = score
+            bestMove = move
+            confirmWin = true
+        }
+
     })
     console.log("--------------------------")
     check(bestMove,team) 
@@ -338,7 +346,7 @@ function check(box, team){      //to point a box and draw
         ctx.fillText("×",box.x,box.y);
     }
     if(team==false){
-        ctx.font = "90px Arial";
+        ctx.font = "bolder 85px Arial";
         ctx.fillStyle = 'green';
         ctx.fillText("◯", box.x, box.y);
     }    
