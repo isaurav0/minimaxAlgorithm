@@ -136,17 +136,7 @@ var box9={
     name: 'box9'
 }
 
-box = []
-box[1] = box1
-box[2] = box2
-box[3] = box3
-box[4] = box4
-box[5] = box5
-box[6] = box6
-box[7] = box7
-box[8] = box8
-box[9] = box9
-
+box = [null, box1, box2, box3, box4, box5, box6, box7, box8, box9]
 
 
 //gameplay
@@ -193,7 +183,6 @@ function userplay(e, player){
     }
 
     else{
-        console.log('invalid move')
         ctx.fillStyle = '#00B4EB';
         ctx.font = "50px Courier"
         ctx.fillText("Invalid Move", 390,647);
@@ -225,7 +214,6 @@ function minimax(box, depth, isMax){
 
     if(result!==null){
         return isMax ? scores[result]-depth : scores[result]+depth //greater the depth, lower the score for maximizing player
-        // return isMax ? scores[result] : scores[result] //greater the depth, lower the score for maximizing player
     }
     
     let unchecked = []  
@@ -254,7 +242,7 @@ function moveAI(){
     let bestScore = -Infinity;
     var bestMove;
     let unchecked=[];
-    let confirmWin = false
+    let confirmWin = false;
 
     //find unchecked boxes
     for(i=1;i<10;i++){
@@ -269,22 +257,17 @@ function moveAI(){
         unCheck(move)   //uncheck this and check other to see the best move
         console.log(move.name, score)
 
-        if( score > bestScore && !confirmWin){     //because winning score is 10 at 0 depth
+        if( score > bestScore && !confirmWin  ){     //because winning score is 10 at 0 depth
             bestScore = score
             bestMove = move
         }
 
         if(score==10){
-            bestScore = score
-            bestMove = move
             confirmWin = true
         }
-
     })
-    console.log("--------------------------")
+
     check(bestMove,team) 
-    console.log("Chosen Move", bestMove)
-    console.log("--------------------------")
     team = true;
     okayToMove = true;
 }

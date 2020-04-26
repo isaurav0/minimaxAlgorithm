@@ -31,14 +31,18 @@
         </style>
     </head>
     <body>
-        <!-- <input type="text" name='roomname' id='roomname' placeholder="Enter roomname"><br> -->
-        <!-- <button id='create' class='initiate' onclick="respond(this.id)"> Create A game </button> <br> -->
-        <!-- <button id='create' class='initiate' onclick="respond(this.id)"> Create A game </button> <br> -->
-        <!-- <button id='join' class='initiate' onclick="respond(this.id)">Join In a Game</button> -->
         <a href="landing.html" id="backbutton"> <-Back- </a>
         <audio src="draw.wav" id="draw"></audio>
         <canvas id="tictac"></canvas>
+        <audio src="select.wav" id="select"></audio>
         <script src="tictac.js"></script>
-        <!-- <script src="test.js"></script> -->
+        <script>
+            var backbutton = document.getElementById("backbutton")
+            backbutton.addEventListener("mouseover", playAudio)
+
+            function playAudio(e){
+                document.getElementById("select").play()
+            }
+        </script>
     </body>
 </html>
